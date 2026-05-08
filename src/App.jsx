@@ -17,7 +17,7 @@ export default function App() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("/api/pipedrive-dashboard")
+    fetch("/.netlify/functions/pipedrive-dashboard")
       .then((res) => res.json())
       .then(setData)
       .catch(console.error);
