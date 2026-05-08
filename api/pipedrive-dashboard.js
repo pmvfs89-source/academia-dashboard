@@ -3,12 +3,12 @@ const OWNER_IDS = [23281672, 30036684, 30036673];
 function getOwnerId(item) {
   return Number(
     item?.user_id?.value ||
-    item?.user_id?.id ||
-    item?.user_id ||
-    item?.owner_id?.id ||
-    item?.owner_id ||
-    item?.assigned_to_user_id ||
-    0
+      item?.user_id?.id ||
+      item?.user_id ||
+      item?.owner_id?.id ||
+      item?.owner_id ||
+      item?.assigned_to_user_id ||
+      0
   );
 }
 
@@ -32,12 +32,24 @@ async function pipedriveFetch(path) {
   return json.data || [];
 }
 
+function makeLookup(items) {
+  return Object.fromEntries(
+    (items || []).map((item) => [Number(item.id), item.name])
+  );
+}
+
 export default async function handler(req, res) {
   try {
-    const [dealsRaw, activitiesRaw] = await Promise.all([
-      pipedriveFetch("deals?limit=500"),
-      pipedriveFetch("activities?limit=500"),
-    ]);
+    const [dealsRaw, activitiesRaw, stagesRaw, pipelinesRaw] =
+      await Promise.all([
+        pipedriveFetch("deals?limit=500"),
+        pipedriveFetch("activities?limit=500"),
+        pipedriveFetch("stages"),
+        pipedriveFetch("pipelines"),
+      ]);
+
+    const stageLookup = makeLookup(stagesRaw);
+    const pipelineLookup = makeLookup(pipelinesRaw);
 
     const deals = dealsRaw
       .filter((deal) => OWNER_IDS.includes(getOwnerId(deal)))
@@ -45,10 +57,12 @@ export default async function handler(req, res) {
         id: deal.id,
         title: deal.title,
         owner_id: getOwnerId(deal),
-        pipeline: deal.pipeline_name || deal.pipeline_id || "Academia",
-        stage: deal.stage_name || deal.stage_id,
+        pipeline_id: deal.pipeline_id,
+        pipeline: pipelineLookup[Number(deal.pipeline_id)] || `Pipeline ${deal.pipeline_id}`,
+        stage_id: deal.stage_id,
+        stage: stageLookup[Number(deal.stage_id)] || `Stage ${deal.stage_id}`,
         status: deal.status,
-        value: deal.value,
+        value: Number(deal.value || 0),
         expectedClose: deal.expected_close_date,
         wonDate: deal.won_time,
         hasNextActivity: Boolean(deal.next_activity_date),
