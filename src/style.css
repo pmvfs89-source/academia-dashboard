@@ -1,15 +1,108 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
+  background: #071028;
   color: white;
+  font-family: Arial, sans-serif;
 }
 
-button {
-  cursor: pointer;
+.page {
+  min-height: 100vh;
+  padding: 40px;
 }
 
-input,
-textarea {
-  font-family: inherit;
+.header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 40px;
+  margin: 8px 0;
+}
+
+.subtitle {
+  color: #94a3b8;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.card,
+.panel {
+  background: #111c35;
+  border: 1px solid #24324f;
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.card p {
+  color: #94a3b8;
+  margin: 0 0 10px;
+}
+
+.card strong {
+  font-size: 28px;
+}
+
+.panel {
+  margin-bottom: 28px;
+}
+
+.owner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid #24324f;
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr 0.8fr 1fr;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid #24324f;
+  font-size: 14px;
+}
+
+.row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.head {
+  color: #93c5fd;
+  font-weight: bold;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .row,
+  .owner {
+    grid-template-columns: 1fr;
+  }
 }
